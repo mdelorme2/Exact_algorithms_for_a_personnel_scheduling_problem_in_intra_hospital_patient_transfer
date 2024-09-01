@@ -15,7 +15,7 @@ The code is divided over 12 folders, each containing the code of one method. The
 - 3_MODEL_V21_MAX		| Sequential MP + (18) to compute the results displayed in Table 6 
 - 3_MODEL_V22			| Sequential MP + (21)
 
-Each folder contains the same substructure. For example, 1_MODEL_V1	contains the following files:
+Each folder contains the same substructure. For example, 1_MODEL_V1 contains the following files:
 - helper_functions.cpp		| Contains a number of secondary functions (this file is usually the same for each subfolder)
 - helper_functions.h		| The header file corresponding to helper_functions.cpp (this file is usually the same for each subfolder)
 - main.cpp			| The front-end code for using the method  
