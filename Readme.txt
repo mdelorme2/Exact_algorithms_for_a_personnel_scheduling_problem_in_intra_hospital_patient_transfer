@@ -16,13 +16,13 @@ The code is divided over 12 folders, each containing the code of one method. The
 - 3_MODEL_V22					| Sequential MP + (21)
 
 Each folder contains the same substructure. For example, 1_MODEL_V1	contains the following files:
-- helper_functions.cpp			| Contains a number of secondary functions (this file is usually the same for each subfolder)
-- helper_functions.h			| The header file corresponding to helper_functions.cpp (this file is usually the same for each subfolder)
-- main.cpp						| The front-end code for using the method  
-- main.h						| The header file corresponding to main.cpp 
-- model.cpp						| Contains the model of the tested method
-- model.h						| The header file corresponding to model.cpp 
-- makefile						| Used for compiling under linux (it needs to be updated by the user)
+- helper_functions.cpp				| Contains a number of secondary functions (this file is usually the same for each subfolder)
+- helper_functions.h				| The header file corresponding to helper_functions.cpp (this file is usually the same for each subfolder)
+- main.cpp					| The front-end code for using the method  
+- main.h					| The header file corresponding to main.cpp 
+- model.cpp					| Contains the model of the tested method
+- model.h					| The header file corresponding to model.cpp 
+- makefile					| Used for compiling under linux (it needs to be updated by the user)
 
 ********
 Once compiled, the following command can be used to run the algorithm:
@@ -53,5 +53,5 @@ Each txt-file is structured as follows:
 		- the number of rotations |D|
 		- the number of time slots in a rotation |H|
 - the remaining |D|.|H| lines all contain, for each time slot:
-    	- the rotation index, the time slot index, and the demand
+    		- the rotation index, the time slot index, and the demand
 
