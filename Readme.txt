@@ -43,7 +43,7 @@ Moreover, "_INPUT.rar" contains a txt-file for each of our test instances. There
 - O4		| A set of 160 modified real-world instances created to measure the effect of reducing the number of worked hours per employee (Table 13)
 - O5		| The set of 16 real-world instances adapted to measure the effect of considering a lunch break (to run with 3_MODEL_V11_BREAKS to obtain the right part of Table 9)
 - O5P		| The set of 16 real-world instances adapted to measure the effect of considering a lunch break (to run with 3_MODEL_V11 to obtain the left part of Table 9)
-Note that 80 instances of dataset O1 are re-used in Tables 10-12.
+Note that 80 instances of dataset O1 are re-used in Tables 11-13.
 
 Each txt-file is structured as follows:
 - the first line contains:
