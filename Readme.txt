@@ -58,3 +58,10 @@ Each txt-file is structured as follows:
 - the remaining |D|.|H| lines all contain, for each time slot:
     	- the rotation index, the time slot index, and the demand
 
+********
+
+## License
+This project is licensed under the [CC BY-NC-ND 4.0](LICENSE.md) license.
+
+
+Any questions, comments, or issues with the code can be reported to Maxence Delorme's academic email address.
