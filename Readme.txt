@@ -2,27 +2,28 @@ This repository contains the code for all algorithms discussed in the paper "Exa
 
 Our algorithms are coded in C++ and use the commercial solver Gurobi for the ILP models. 
 The code is divided over 12 folders, each containing the code of one method. The different folders correspond to the following methods in our paper:
-- 1_MODEL_V1			| Model M1 + (6)
-- 1_MODEL_V2			| Model M1 + (9)
-- 2_MODEL_V1			| Model M2 + (6)
-- 2_MODEL_V2			| Model M2 + (9)
-- 3_MODEL_V11			| Direct MP + (18)
-- 3_MODEL_V11_IE		| Direct MP + (18) to compute the results displayed in Table 7
-- 3_MODEL_V11_IS		| Direct MP + (18) to compute the results displayed in Table 8
-- 3_MODEL_V12			| Direct MP + (21)
-- 3_MODEL_V21			| Sequential MP + (18)
-- 3_MODEL_V21_COUNT		| Sequential MP + (18) to compute the results displayed in Table 6 
-- 3_MODEL_V21_MAX		| Sequential MP + (18) to compute the results displayed in Table 6 
-- 3_MODEL_V22			| Sequential MP + (21)
+- 1_MODEL_V1					| Model M1 + (6)
+- 1_MODEL_V2					| Model M1 + (9)
+- 2_MODEL_V1					| Model M2 + (6)
+- 2_MODEL_V2					| Model M2 + (9)
+- 3_MODEL_V11					| Direct MP + (18)
+- 3_MODEL_V11_BREAKS			| Direct MP + (18) to compute the results displayed in Table 9
+- 3_MODEL_V11_IE				| Direct MP + (18) to compute the results displayed in Table 7
+- 3_MODEL_V11_IS				| Direct MP + (18) to compute the results displayed in Table 8
+- 3_MODEL_V12					| Direct MP + (21)
+- 3_MODEL_V21					| Sequential MP + (18)
+- 3_MODEL_V21_COUNT				| Sequential MP + (18) to compute the results displayed in Table 6 
+- 3_MODEL_V21_MAX				| Sequential MP + (18) to compute the results displayed in Table 6 
+- 3_MODEL_V22					| Sequential MP + (21)
 
-Each folder contains the same substructure. For example, 1_MODEL_V1 contains the following files:
-- helper_functions.cpp		| Contains a number of secondary functions (this file is usually the same for each subfolder)
-- helper_functions.h		| The header file corresponding to helper_functions.cpp (this file is usually the same for each subfolder)
-- main.cpp			| The front-end code for using the method  
-- main.h			| The header file corresponding to main.cpp 
-- model.cpp			| Contains the model of the tested method
-- model.h			| The header file corresponding to model.cpp 
-- makefile			| Used for compiling under linux (it needs to be updated by the user)
+Each folder contains the same substructure. For example, 1_MODEL_V1	contains the following files:
+- helper_functions.cpp			| Contains a number of secondary functions (this file is usually the same for each subfolder)
+- helper_functions.h			| The header file corresponding to helper_functions.cpp (this file is usually the same for each subfolder)
+- main.cpp						| The front-end code for using the method  
+- main.h						| The header file corresponding to main.cpp 
+- model.cpp						| Contains the model of the tested method
+- model.h						| The header file corresponding to model.cpp 
+- makefile						| Used for compiling under linux (it needs to be updated by the user)
 
 ********
 Once compiled, the following command can be used to run the algorithm:
@@ -36,10 +37,12 @@ where
 
 Moreover, "_INPUT.rar" contains a txt-file for each of our test instances. There are 7 main folders, each corresponding to a different dataset:
 - REAL		| A set of 16 real-world instances
-- O1		| A set of 240 modified real-world instances created to measure the effect of increasing the average demand (Table 9)
-- O2		| A set of 160 modified real-world instances created to measure the effect of increasing the granularity of the time horizon (Table 10)
-- O3		| A set of 160 modified real-world instances created to measure the effect of shuffling the demand (Table 11)
-- O4		| A set of 160 modified real-world instances created to measure the effect of reducing the number of worked hours per employee (Table 12)
+- O1		| A set of 240 modified real-world instances created to measure the effect of increasing the average demand (Table 10)
+- O2		| A set of 160 modified real-world instances created to measure the effect of increasing the granularity of the time horizon (Table 11)
+- O3		| A set of 160 modified real-world instances created to measure the effect of shuffling the demand (Table 12)
+- O4		| A set of 160 modified real-world instances created to measure the effect of reducing the number of worked hours per employee (Table 13)
+- O5		| The set of 16 real-world instances adapted to measure the effect of considering a lunch break (to run with 3_MODEL_V11_BREAKS to obtain the right part of Table 9)
+- O5P		| The set of 16 real-world instances adapted to measure the effect of considering a lunch break (to run with 3_MODEL_V11 to obtain the left part of Table 9)
 Note that 80 instances of dataset O1 are re-used in Tables 10-12.
 
 Each txt-file is structured as follows:
@@ -53,5 +56,5 @@ Each txt-file is structured as follows:
 		- the number of rotations |D|
 		- the number of time slots in a rotation |H|
 - the remaining |D|.|H| lines all contain, for each time slot:
-    		- the rotation index, the time slot index, and the demand
+    	- the rotation index, the time slot index, and the demand
 
