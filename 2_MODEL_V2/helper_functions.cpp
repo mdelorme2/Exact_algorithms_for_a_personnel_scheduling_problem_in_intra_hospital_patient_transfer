@@ -41,11 +41,11 @@ Instance readInstance(const string& filename, Solution& sol) {
 		inst.sdmn = stoi(line);
 		getline(file, line, '\t');
 		inst.sdmx = stoi(line);
-		getline(file, line, '\t');
+		getline(file, line, '\t')
 		inst.nbR = stoi(line);
-		getline(file, line, '\t');
+		getline(file, line, '\t')
 		inst.nbDays = stoi(line);
-		getline(file, line, '\n');
+		getline(file, line, '\n')
 		inst.nbHours = stoi(line);
 		inst.nbTS = inst.nbDays*inst.nbHours;
 		
@@ -69,10 +69,10 @@ Instance readInstance(const string& filename, Solution& sol) {
 				for(int k=inst.sdmn; k<=inst.sdmx; k++){
 					vector<int> shift (inst.nbTS,0);
 					for(int l=0; l < k;l++){
-						shift[(i*inst.nbHours+j+l) % inst.nbTS] = 1;
+						shift[(i*nbHours+j+l) % inst.nbTS] = 1;
 					}
 					for(int l=0; l < inst.nbR;l++){
-						shift[(i*inst.nbHours+j+k+l) % inst.nbTS] = 2;
+						shift[(i*nbHours+j+k+l) % inst.nbTS] = 2;
 					}					
 					shift.push_back((k-inst.sdmn)*inst.nbHours + j);
 					shift.push_back(k);

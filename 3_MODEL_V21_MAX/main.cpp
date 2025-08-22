@@ -18,15 +18,9 @@ int main(int argc, char **argv){
     do{
 		MODEL(inst,sol,2);
 		SLAVE(inst,sol,sol.cuts.back());
-	} while (sol.opt == 0 && getCPUTime() - start < 3600);
+	} while (sol.opt == 0);
 	sol.time = getCPUTime() - start;	
-	if(sol.time < 3600)
-		printSInfo(sol, inst);
-	else{
-		sol.LB.resize(0); sol.LB.push_back(0); sol.LB.push_back(0);
-		sol.UB.resize(0); sol.UB.push_back(999); sol.UB.push_back(999);
-		sol.opt = -1;
-	}
+	printSInfo(sol, inst);
 	printInfo(pathAndFileout, sol, filein);
 }
 

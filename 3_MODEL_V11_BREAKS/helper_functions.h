@@ -17,9 +17,9 @@ const int M = 1000000;				// big constant
 
 struct Instance
 {
-	int nbDays = 7; 				// number of days per week
-	int nbHours = 24; 				// number of hours per day
-	int nbTS = 168;					// number of time slots
+	int nbDays; 				// number of days per week
+	int nbHours; 				// number of hours per day
+	int nbTS;					// number of time slots
 	int nbE;						// number of employees
 	int maxH, maxS;					// maximum number of hours/shifts worked by an employee
 	int sdmn, sdmx;					// minimum/maximum shift duration
@@ -31,7 +31,7 @@ struct Instance
 
 struct Solution
 {
-	int opt, Nvar, Nconstr, Ncoeff, valid, C1, C2, SD;
+	int opt, Nvar, Nconstr, Ncoeff, valid;
 	vector<int> LB, UB;
 	double time;
     vector<vector<int> > isEwTS;

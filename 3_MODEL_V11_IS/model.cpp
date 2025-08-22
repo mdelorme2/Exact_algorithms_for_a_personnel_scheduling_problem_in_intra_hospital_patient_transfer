@@ -216,8 +216,6 @@ void SLAVE(const Instance& inst, Solution& sol, vector<vector<int> > cut) {
 	}
 	else{
 		cout << "Solution invalid!" << endl;
-		sol.LB.resize(0);
-		sol.UB.resize(0);
 	}
 }
 

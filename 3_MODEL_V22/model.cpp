@@ -97,11 +97,11 @@ void MODEL(const Instance& inst, Solution& sol, const int& level) {
     // store the results in a Solution object
     sol.Nvar = model.get(GRB_IntAttr_NumVars);       
     sol.Nconstr = model.get(GRB_IntAttr_NumConstrs); 
-    sol.Ncoeff = model.get(GRB_IntAttr_NumNZs);  
+    sol.Ncoeff = model.get(GRB_IntAttr_NumNZs); 
+	sol.LB.push_back(ceil(model.get(GRB_DoubleAttr_ObjBound) - EPSILON)); 
 	
 	// if a solution has been found
-    if (model.get(GRB_IntAttr_SolCount) >= 1) { 
-		sol.LB.push_back(ceil(model.get(GRB_DoubleAttr_ObjBound) - EPSILON));	
+    if (model.get(GRB_IntAttr_SolCount) >= 1) { 		
 		sol.UB.push_back(ceil(model.get(GRB_DoubleAttr_ObjVal) - EPSILON));
 		if(level == 2){
 			cout << "A solution of level 2 was found:" << endl;
@@ -228,8 +228,6 @@ void SLAVE(const Instance& inst, Solution& sol, vector<vector<int> > cut) {
 	}
 	else{
 		cout << "Solution invalid!" << endl;
-		sol.LB.resize(1);
-		sol.UB.resize(1);
 	}
 }
 

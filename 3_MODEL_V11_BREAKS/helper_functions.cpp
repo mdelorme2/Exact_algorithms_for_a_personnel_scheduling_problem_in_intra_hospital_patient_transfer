@@ -41,14 +41,14 @@ Instance readInstance(const string& filename, Solution& sol) {
 		inst.sdmn = stoi(line);
 		getline(file, line, '\t');
 		inst.sdmx = stoi(line);
-		getline(file, line, '\t')
+		getline(file, line, '\t');
 		inst.nbR = stoi(line);
-		getline(file, line, '\t')
+		getline(file, line, '\t');
 		inst.nbDays = stoi(line);
-		getline(file, line, '\n')
+		getline(file, line, '\n');
 		inst.nbHours = stoi(line);
 		inst.nbTS = inst.nbDays*inst.nbHours;
-		
+
 		// reshape the array
 		inst.demand.resize(inst.nbTS,0);
 		
@@ -69,13 +69,19 @@ Instance readInstance(const string& filename, Solution& sol) {
 				for(int k=inst.sdmn; k<=inst.sdmx; k++){
 					vector<int> shift (inst.nbTS,0);
 					for(int l=0; l < k;l++){
-						shift[(i*nbHours+j+l) % inst.nbTS] = 1;
+						if(l != 4)
+							shift[(i*inst.nbHours+j+l) % inst.nbTS] = 1;
+						else 
+							shift[(i*inst.nbHours+j+l) % inst.nbTS] = 2;
 					}
 					for(int l=0; l < inst.nbR;l++){
-						shift[(i*nbHours+j+k+l) % inst.nbTS] = 2;
+						shift[(i*inst.nbHours+j+k+l) % inst.nbTS] = 2;
 					}					
 					shift.push_back((k-inst.sdmn)*inst.nbHours + j);
-					shift.push_back(k);
+					shift.push_back(k-1);
+					for(int l = 0; l < shift.size();l++)
+						cout << shift[l] << " ";
+					cout << endl;
 					inst.shifts.push_back(shift);
 				}
 			}
@@ -92,11 +98,11 @@ Instance readInstance(const string& filename, Solution& sol) {
 void printInfo(const string& pathAndFileout, const Solution& sol, const string& filein){
 	string nameFile = pathAndFileout;
 	std::ofstream file(nameFile.c_str(), std::ios::out | std::ios::app);
-	file << filein << "\t"  << sol.opt << "\t" << sol.time << "\t";
+	file << filein << "\t"  << sol.isEwTS.size() << "\t"  << sol.opt << "\t" << sol.time << "\t";
 	for(int i = 0; i < sol.LB.size(); i++){
 		file << sol.LB[i] << "\t" << sol.UB[i] << "\t";
 	}
-	file << sol.Nvar << "\t" << sol.Nconstr << "\t" << sol.Ncoeff  << "\t" << sol.valid << endl;
+	file << sol.Nvar << "\t" << sol.Nconstr << "\t" << sol.Ncoeff  << "\t" << sol.cuts.size() - 1<< "\t" << sol.valid << endl;
 	file.close();
 }
 

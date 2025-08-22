@@ -17,9 +17,9 @@ const int M = 1000000;				// big constant
 
 struct Instance
 {
-	int nbDays; 				// number of days per week
-	int nbHours; 				// number of hours per day
-	int nbTS;					// number of time slots
+	int nbDays = 7; 				// number of days per week
+	int nbHours = 24; 				// number of hours per day
+	int nbTS = 168;					// number of time slots
 	int nbE;						// number of employees
 	int maxH, maxS;					// maximum number of hours/shifts worked by an employee
 	int sdmn, sdmx;					// minimum/maximum shift duration
@@ -39,7 +39,7 @@ struct Solution
 };
 
 double getCPUTime();
-Instance readInstance(const string& filename, Solution& sol);
+Instance readInstance(const string& filename, Solution& sol, const int& i);
 void printInfo(const string& pathAndFileout, const Solution& sol, const string& filein);
 void printSInfo(Solution& sol, const Instance& inst);
 

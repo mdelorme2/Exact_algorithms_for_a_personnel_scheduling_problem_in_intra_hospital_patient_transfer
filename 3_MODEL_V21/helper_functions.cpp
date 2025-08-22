@@ -4,7 +4,7 @@ void Instance::print(){
 	cout << "nbE = " << nbE << " " << "maxS/maxH = " << maxS <<"/"<< maxH  << " sdmn/sdmx = " << sdmn <<"/"<< sdmx << " nbR = " << nbR << endl;
 	for(int i=0; i<nbDays ;i++){
 		for(int j=0; j < nbHours; j++){
-			cout << i << "\t" << j << "\t" << demand[i*nbHours+j] << endl;
+			cout << i << "\t" << j << "\t" << demand[i*24+j] << endl;
 		}
 	}
 	/*for(int i=0; i<shifts.size() ;i++){
@@ -41,13 +41,8 @@ Instance readInstance(const string& filename, Solution& sol) {
 		inst.sdmn = stoi(line);
 		getline(file, line, '\t');
 		inst.sdmx = stoi(line);
-		getline(file, line, '\t');
-		inst.nbR = stoi(line);
-		getline(file, line, '\t');
-		inst.nbDays = stoi(line);
 		getline(file, line, '\n');
-		inst.nbHours = stoi(line);
-		inst.nbTS = inst.nbDays*inst.nbHours;
+		inst.nbR = stoi(line);
 
 		// reshape the array
 		inst.demand.resize(inst.nbTS,0);
@@ -69,10 +64,10 @@ Instance readInstance(const string& filename, Solution& sol) {
 				for(int k=inst.sdmn; k<=inst.sdmx; k++){
 					vector<int> shift (inst.nbTS,0);
 					for(int l=0; l < k;l++){
-						shift[(i*inst.nbHours+j+l) % inst.nbTS] = 1;
+						shift[(i*24+j+l) % inst.nbTS] = 1;
 					}
 					for(int l=0; l < inst.nbR;l++){
-						shift[(i*inst.nbHours+j+k+l) % inst.nbTS] = 2;
+						shift[(i*24+j+k+l) % inst.nbTS] = 2;
 					}					
 					shift.push_back((k-inst.sdmn)*inst.nbHours + j);
 					shift.push_back(k);

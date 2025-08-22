@@ -1,6 +1,6 @@
 #include "model.h"
 
-void MODEL(const Instance& inst, Solution& sol, const int& level) {
+void MODEL(const Instance& inst, Solution& sol) {
 	
 	// create a model
     GRBEnv env = GRBEnv();              	
@@ -10,7 +10,6 @@ void MODEL(const Instance& inst, Solution& sol, const int& level) {
     vector<vector<GRBVar> > x (inst.shifts.size(), vector<GRBVar>(ceil(log2(inst.nbE)) + 1)); 
 	vector<GRBVar> y(inst.nbHours * (1+inst.sdmx-inst.sdmn));
 	GRBLinExpr obj = 0;
-	GRBLinExpr obj2 = 0;
 	
     // initizalization of the variables for the model
 	for (int i = 0; i < inst.shifts.size(); i++) {
@@ -18,10 +17,8 @@ void MODEL(const Instance& inst, Solution& sol, const int& level) {
             x[i][j] = model.addVar(0, 1, 0, GRB_BINARY);
         }
     }
-	if (level == 2){
-		for (int i = 0; i < inst.nbHours * (1+inst.sdmx-inst.sdmn); i++) {
-			y[i] = model.addVar(0, 1, 0, GRB_BINARY);		
-		}
+	for (int i = 0; i < inst.nbHours * (1+inst.sdmx-inst.sdmn); i++) {
+		y[i] = model.addVar(0, 1, 0, GRB_BINARY);	
 	}
     model.update();
 
@@ -36,8 +33,8 @@ void MODEL(const Instance& inst, Solution& sol, const int& level) {
 		for (int j = 0; j < ceil(log2(inst.nbE))+1; j++){
 			totS += pow(2,j) * x[i][j];
 			totH += pow(2,j) * x[i][j] * inst.shifts[i][inst.nbTS+1];
-			if(level == 2) sA[inst.shifts[i][inst.nbTS]] += pow(2,j) * x[i][j];
-			obj += pow(2,j) * x[i][j] * inst.shifts[i][inst.nbTS+1];
+			sA[inst.shifts[i][inst.nbTS]] += pow(2,j) * x[i][j];
+			obj += (inst.nbHours * (1+inst.sdmx-inst.sdmn)) * pow(2,j) * x[i][j] * inst.shifts[i][inst.nbTS+1];
 			for (int k = 0; k < inst.nbTS; k++) {
 				if(inst.shifts[i][k] == 1){
 					wf[k] += pow(2,j) * x[i][j];
@@ -59,13 +56,10 @@ void MODEL(const Instance& inst, Solution& sol, const int& level) {
 	for (int k = 0; k < inst.nbTS; k++){
 		model.addConstr(occupied[k] <= inst.nbE);
 	}
-	if (level == 2){
-		model.addConstr(obj <= sol.UB.back());
-		for (int i = 0; i < inst.nbHours * (1+inst.sdmx-inst.sdmn); i++) {
-			model.addConstr(sA[i] <= inst.nbDays * inst.nbE * y[i]);
-			model.addConstr(sA[i] >= y[i]);
-			obj2+= y[i];
-		}
+
+	for (int i = 0; i < inst.nbHours * (1+inst.sdmx-inst.sdmn); i++) {
+		model.addConstr(sA[i] <= inst.nbDays * inst.nbE * y[i]);
+		obj+= y[i];
 	}
 	
 	// no-good cuts
@@ -79,9 +73,8 @@ void MODEL(const Instance& inst, Solution& sol, const int& level) {
 		model.addConstr(LHS <= RHS - 1);
 	}
 
-	// set the objective: minimize obj
-    if(level == 1) model.setObjective(obj, GRB_MINIMIZE);
-	if(level == 2) model.setObjective(obj2, GRB_MAXIMIZE);
+    // set the objective: minimize obj
+    model.setObjective(obj, GRB_MINIMIZE);
     
 	// change some settings
     model.getEnv().set(GRB_DoubleParam_MIPGap, 0);
@@ -94,32 +87,30 @@ void MODEL(const Instance& inst, Solution& sol, const int& level) {
     // store the results in a Solution object
     sol.Nvar = model.get(GRB_IntAttr_NumVars);       
     sol.Nconstr = model.get(GRB_IntAttr_NumConstrs); 
-    sol.Ncoeff = model.get(GRB_IntAttr_NumNZs);
-	sol.LB.push_back(ceil(model.get(GRB_DoubleAttr_ObjBound) - EPSILON)); 
+    sol.Ncoeff = model.get(GRB_IntAttr_NumNZs);    
+	int finalLB = ceil(model.get(GRB_DoubleAttr_ObjBound) - EPSILON); 
+	sol.LB.push_back(finalLB / (inst.nbHours * (1+inst.sdmx-inst.sdmn)));
+	sol.LB.push_back(finalLB % (inst.nbHours * (1+inst.sdmx-inst.sdmn)));
 	
 	// if a solution has been found
     if (model.get(GRB_IntAttr_SolCount) >= 1) { 		
-		sol.UB.push_back(ceil(model.get(GRB_DoubleAttr_ObjVal) - EPSILON));
-		if(level == 2){
-			cout << "A solution of level 2 was found:" << endl;
-			vector<vector<int> > cut;
-			for (int i = 0; i < inst.shifts.size(); i++){
-				int nb = 0;
-				for (int j = 0; j < ceil(log2(inst.nbE))+1; j++){
-					if(ceil(x[i][j].get(GRB_DoubleAttr_X) - EPSILON) == 1){
-						nb += pow(2,j);
-						cut.push_back({i,j});
-					}
+		int finalUB = ceil(model.get(GRB_DoubleAttr_ObjVal) - EPSILON); 
+		sol.UB.push_back(finalUB / (inst.nbHours * (1+inst.sdmx-inst.sdmn)));
+		sol.UB.push_back(finalUB % (inst.nbHours * (1+inst.sdmx-inst.sdmn)));
+		cout << "A solution was found:" << endl;
+		vector<vector<int> > cut;
+		for (int i = 0; i < inst.shifts.size(); i++){
+			int nb = 0;
+			for (int j = 0; j < ceil(log2(inst.nbE))+1; j++){
+				if(ceil(x[i][j].get(GRB_DoubleAttr_X) - EPSILON) == 1){
+					nb += pow(2,j);
+					cut.push_back({i,j});
 				}
-				if(nb > 0) cout << nb << " times shift " << i << endl;
 			}
-			sol.cuts.push_back(cut);
+			if(nb > 0) cout << nb << " times shift " << i << endl;
 		}
+		sol.cuts.push_back(cut);
     }
-	else{
-		cout << "Solution with " << sol.UB.back() << " hours is infeasible, let's try " << sol.UB.back() + 1 << endl;
-		sol.UB.back() += 1; sol.LB.back() += 1; 
-	}
 }
 
 void SLAVE(const Instance& inst, Solution& sol, vector<vector<int> > cut) {
@@ -189,7 +180,7 @@ void SLAVE(const Instance& inst, Solution& sol, vector<vector<int> > cut) {
     // find the optimal solution	
     model.optimize();
 
-    // store the results in a Solution object      	
+    // store the results in a Solution object  	
 	sol.opt = 0;
 
 	// if a solution has been found
@@ -225,6 +216,8 @@ void SLAVE(const Instance& inst, Solution& sol, vector<vector<int> > cut) {
 	}
 	else{
 		cout << "Solution invalid!" << endl;
+		sol.LB.resize(0);
+		sol.UB.resize(0);
 	}
 }
 
