@@ -1,4 +1,4 @@
-This repository contains the code for all algorithms discussed in the paper "Exact algorithms for a personal scheduling problem in intra-hospital patient transfer with hierarchical objectives" by Marco Claps, Maxence Delorme, Manuel Iori, and Giorgio Zucchi.
+This repository contains the code for all algorithms discussed in the paper "Exact algorithms for a personnel scheduling problem in intra-hospital patient transfer with hierarchical objectives" by Marco Claps, Maxence Delorme, Manuel Iori, and Giorgio Zucchi.
 
 Our algorithms are coded in C++ and use the commercial solver Gurobi for the ILP models. 
 The code is divided over 12 folders, each containing the code of one method. The different folders correspond to the following methods in our paper:
@@ -62,6 +62,7 @@ Each txt-file is structured as follows:
 
 ## License
 This project is licensed under the [CC BY-NC-ND 4.0](LICENSE.md) license.
+
 
 
 Any questions, comments, or issues with the code can be reported to Maxence Delorme's academic email address.
